@@ -76,14 +76,14 @@ def framing(sig, fs=16000, win_len=0.025, win_hop=0.01):
     if win_len < win_hop:
         raise ParameterError(ErrorMsgs["win_len_win_hop_comparison"])
 
-    # compute frame length and frame step (convert from seconds to samples)
-    frame_length = win_len * fs
-    frame_step = win_hop * fs
+    # compute frame length and frame step (convert from seconds to samples) and convert to integers
+    frame_length = int(win_len * fs)
+    frame_step = int(win_hop * fs)
     signal_length = len(sig)
     frames_overlap = frame_length - frame_step
 
     # make sure to use integers as indices
-    frames = stride_trick(sig, int(frame_length), int(frame_step))
+    frames = stride_trick(sig, frame_length, frame_step)
     if len(frames[-1]) < frame_length:
         frames[-1] = np.append(frames[-1], np.array([0]*(frame_length - len(frames[0]))))
 
